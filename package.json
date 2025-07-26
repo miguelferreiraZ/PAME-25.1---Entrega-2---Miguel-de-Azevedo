@@ -1,0 +1,10 @@
+{
+  "name": "sistema-hotel",
+  "version": "1.0.0",
+  "description": "Sistema de gerenciamento de hotel",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js"
+  }
+}
