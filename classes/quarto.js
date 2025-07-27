@@ -1,10 +1,10 @@
 class Quarto {
-    constructor(qtdCamas, precoNoite, qtdQuartosDisponivel, nome, descricao) {
-        this.qtdCamas = qtdCamas;
-        this.precoNoite = precoNoite;
-        this.qtdQuartosDisponivel = qtdQuartosDisponivel;
+    constructor(nome, descricao, qtdCamas, precoNoite) {
         this.nome = nome;
         this.descricao = descricao;
+        this.qtdCamas = qtdCamas;
+        this.precoNoite = precoNoite;
+        this.qtdQuartosDisponiveis = 1;
         this.id = Quarto.generateId();
     }
 

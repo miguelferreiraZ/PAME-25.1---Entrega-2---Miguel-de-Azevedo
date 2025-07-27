@@ -27,4 +27,4 @@ function escreverDados(data) {
     fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
 
-module.exports = { lerDados, escreverDados};
+export { lerDados, escreverDados };

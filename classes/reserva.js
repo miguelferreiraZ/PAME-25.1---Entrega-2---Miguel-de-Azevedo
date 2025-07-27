@@ -1,10 +1,10 @@
 class Reserva {
-    constructor(idCliente, idQuarto, status, dataEntrada, dataSaida) {
+    constructor(idCliente, idQuarto, dataEntrada, dataSaida) {
         this.idCliente = idCliente;
         this.idQuarto = idQuarto;
-        this.status = status; // 'confirmada', 'cancelada'
         this.dataEntrada = dataEntrada;
         this.dataSaida = dataSaida;
+        this.status = 'ativa';
         this.id = Reserva.generateId();
     }
     static generateId() {

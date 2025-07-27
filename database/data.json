@@ -22,17 +22,18 @@
         "nome": "Suíte Luxo",
         "descricao": "Vista para o mar",
         "qtd_camas": 2,
-        "preco": 450,
-        "disponivel": true
+        "precoNoite": 450,
+        "qtdQuartosDisponiveis": 1
         }
     },
     "reservas": {
         "1": {
         "idCliente": "1",
         "idQuarto": "1",
-        "status": "ativa",
         "dataEntrada": "2025-07-30",
-        "dataSaida": "2025-08-02"
+        "dataSaida": "2025-08-02",
+        "status": "ativa"
         }
+
     }
 }

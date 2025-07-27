@@ -1,21 +1,23 @@
 import { lerDados, escreverDados } from "../utils/utils.js";
 import Cliente from "./cliente.js";
 import Funcionario from "./funcionario.js";
+import Reserva from "./reserva.js";
+import Quarto from "./quarto.js";
 
 // funcionario:
 // - ver meus dados <getProfile> (quando eu logar, salvo o json do usuario em uma variável SEMPRE)
-// - ver lista de reservas (getReservas)
-// - ver lista de quartos (mesmo pros 2) (getQuartos)
-// - ver lista de clientes (getClientes)
+// - ver lista de reservas (getReservas) <>
+// - ver lista de quartos (mesmo pros 2) (getQuartos) <>
+// - ver lista de clientes (getClientes) <>
 // - mudar status da reserva (pendente, adiada, realizada, cancelada) (setReserva)
-// - adicionar quarto (addQuarto)
-// - fazer cadastro funcionário (minha opinião) (loginFuncionario)
+// - adicionar quarto (createQuarto) <>
+// - fazer cadastro funcionário (minha opinião) (createFuncionario) <>
 
 
 // cliente:
 // - ver meus dados (getProfile)
-// - ver lista de quartos (mesmo pros 2) (getQuartos)
-// - fazer reserva (como fazer isso?)
+// - ver lista de quartos (mesmo pros 2) (getQuartos) <>
+// - fazer reserva (como fazer isso?) 
 // - cancelar reserva (como fazer isso?)
 // - ver minhas reservas ()
 
@@ -30,21 +32,97 @@ class Sistema {
     }
 
     static getClientes() {
-        // ver lista de clientes
+        const dados = lerDados();
+        return dados.clientes || {};
     }
 
     static getReservas() {
-        // json of all reservations
+        const dados = lerDados();
+        return dados.reservas || {};
     }
 
     static getQuartos() {
-        // json of all rooms
+        const dados = lerDados();
+        return dados.quartos || {};
     }
 
     static getFuncionarios() {
-        // json of all employees
+        const dados = lerDados();
+        return dados.funcionarios || {};
     }
 
+    // menu do funcionario
+    createQuarto(nome, descricao, qtdCamas, precoNoite){
+        const dados = lerDados();
+
+        if (!dados.quartos) {
+            dados.quartos = {};
+        }
+
+        // verifica se já existe um quarto com o mesmo nome
+        for (const id in dados.quartos) {
+            if (dados.quartos[id].nome === nome) {
+                console.log(`Quarto com nome "${nome}" já existe, adicionando mais 1 à quantidade.`);
+                dados.quartos[id].qtdQuartosDisponiveis += 1;
+                escreverDados(dados);
+                return;
+            }
+        }
+
+        // cria um novo quarto (sem parâmetro qtdQuartosDisponivel)
+        const novoQuarto = new Quarto(nome, descricao, qtdCamas, precoNoite);
+
+        // salva o quarto no formato do bd
+        dados.quartos[String(novoQuarto.id)] = {
+            nome: novoQuarto.nome,
+            descricao: novoQuarto.descricao,
+            qtd_camas: novoQuarto.qtdCamas,
+            precoNoite: novoQuarto.precoNoite,
+            qtdQuartosDisponiveis: novoQuarto.qtdQuartosDisponivel
+        };
+
+        escreverDados(dados);
+        console.log(`Quarto "${nome}" criado com sucesso (ID: ${novoQuarto.id})`);
+    }
+
+    // menu do cliente
+    createReserva(idCliente, idQuarto, dataEntrada, dataSaida){
+        const dados = lerDados();
+
+        if (!dados.reservas) {
+            dados.reservas = {};
+        }
+
+        // aqui verificamos se o quarto existe
+        if (!dados.quartos[idQuarto]) {
+            console.log(`Quarto ${idQuarto} não existe`);
+            return;
+        }
+
+        // verifica se o quarto já está reservado (verificando nas reservas ativas)
+        for (const id in dados.reservas) {
+            if (dados.reservas[id].idQuarto === idQuarto && dados.reservas[id].status === "ativa") {
+                console.log(`Quarto ${idQuarto} já está reservado`);
+                return;
+            }
+        }
+
+
+        const novaReserva = new Reserva(idCliente, idQuarto, dataEntrada, dataSaida);
+        
+        dados.reservas[novaReserva.id] = {
+            idCliente: novaReserva.idCliente,
+            idQuarto: novaReserva.idQuarto,
+            dataEntrada: novaReserva.dataEntrada,
+            dataSaida: novaReserva.dataSaida,
+            status: novaReserva.status
+        };
+
+        escreverDados(dados);
+        console.log(`Reserva criada com sucesso (ID: ${novaReserva.id})`);
+    }
+
+    // menu do funcionario
     createCliente(nome, dataNascimento, cpf, email, senha){
         // ler o banco de dados
         const dados = lerDados();
@@ -82,6 +160,7 @@ class Sistema {
 
     }
     
+    // menu do funcionario
     createFuncionario(nome, dataNascimento, cpf, email, senha){
         const dados = lerDados();
 
