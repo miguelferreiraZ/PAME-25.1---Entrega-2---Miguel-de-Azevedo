@@ -17,9 +17,9 @@ import Quarto from "./quarto.js";
 // cliente:
 // - ver meus dados (getProfile)
 // - ver lista de quartos (mesmo pros 2) (getQuartos) <>
-// - fazer reserva (como fazer isso?) 
-// - cancelar reserva (como fazer isso?)
-// - ver minhas reservas ()
+// - fazer reserva (como fazer isso?) <>
+// - cancelar reserva (como fazer isso?) <>
+// - ver minhas reservas () 
 
 
 // inicio:
@@ -120,6 +120,51 @@ class Sistema {
 
         escreverDados(dados);
         console.log(`Reserva criada com sucesso (ID: ${novaReserva.id})`);
+    }
+
+    // tecnicamente o usuario so pode fazer uma reserva por vez
+    // entao eu posso simplesmente receber o idCliente e mudar o status da reserva que esta no ID dele
+    cancelReserva(idCliente){
+        const dados = lerDados();
+
+        for (const id in dados.reservas) {
+            if (dados.reservas[id].idCliente === idCliente && dados.reservas[id].status === "ativa") {
+                dados.reservas[id].status = "cancelada";
+                escreverDados(dados);
+                console.log(`Reserva do quarto ${dados.reservas[id].idQuarto} cancelada com sucesso`);
+                return;
+            }
+        }
+        console.log(`Você não possui nenhuma reserva em seu nome`);
+    }
+
+    verReservas(idCliente){
+        const dados = lerDados();
+        const reservasCliente = [];
+
+        for(const id in dados.reservas){
+            if (dados.reservas[id].idCliente === idCliente) {
+                reservasCliente.push({
+                    id: id,
+                    idQuarto: dados.reservas[id].idQuarto,
+                    dataEntrada: dados.reservas[id].dataEntrada,
+                    dataSaida: dados.reservas[id].dataSaida,
+                    status: dados.reservas[id].status
+                });
+            }
+        }
+
+        if (reservasCliente.length === 0) {
+            console.log("Você não possui nenhuma reserva.");
+            return [];
+        }
+
+        console.log("Suas reservas:");
+        reservasCliente.forEach(reserva => {
+            console.log(`- Quarto ${reserva.idQuarto}: ${reserva.dataEntrada} a ${reserva.dataSaida} (${reserva.status})`);
+        });
+
+        return reservasCliente;
     }
 
     // menu do funcionario
