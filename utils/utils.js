@@ -5,9 +5,9 @@
 // entao fs se assemelha a os do python
 // path == path do python
 
-// o require() eh a mesma coisa que o import, porem de um jeito diferente
-const fs = require("fs");
-const path = require("path");
+// o import eh a sintaxe ES6 modules (mais moderna)
+import fs from "fs";
+import path from "path";
 
 // caminho para o json (banco de dados)
 const dbPath = path.join("database/data.json");

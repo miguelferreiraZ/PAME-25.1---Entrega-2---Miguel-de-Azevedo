@@ -1,39 +1,27 @@
 {
-    "clientes": {
-        "1": {
-        "nome": "Miguel",
-        "dataNascimento": "15-05-1990",
-        "cpf": "12345678901",
-        "email": "miguel@example.com",
-        "senha": "senha123"
-        }
+  "clientes": {
+    "1": {
+      "nome": "Teste da Silva",
+      "dataNascimento": "05-05-2005",
+      "cpf": "18792345677",
+      "email": "testedasilva@hotmail.com",
+      "senha": "123"
     },
-    "funcionarios": {
-        "1": {
-        "nome": "Administrador",
-        "dataNascimento": "1985-03-20",
-        "cpf": "98765432100",
-        "email": "admin@hotel.com",
-        "senha": "admin123"
-        }
-    },
-    "quartos": {
-        "1": {
-        "nome": "Suíte Luxo",
-        "descricao": "Vista para o mar",
-        "qtd_camas": 2,
-        "precoNoite": 450,
-        "qtdQuartosDisponiveis": 1
-        }
-    },
-    "reservas": {
-        "1": {
-        "idCliente": "1",
-        "idQuarto": "1",
-        "dataEntrada": "2025-07-30",
-        "dataSaida": "2025-08-02",
-        "status": "ativa"
-        }
-
+    "2": {
+      "nome": "testando",
+      "dataNascimento": "12312",
+      "cpf": "213123",
+      "email": "1231231",
+      "senha": "123"
     }
+  },
+  "funcionarios": {
+    "1": {
+      "nome": "admin",
+      "dataNascimento": "01-01-2001",
+      "cpf": "12345678900",
+      "email": "admin@admin.com",
+      "senha": "admin"
+    }
+  }
 }

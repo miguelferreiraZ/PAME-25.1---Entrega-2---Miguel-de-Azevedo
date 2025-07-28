@@ -4,29 +4,7 @@ import Funcionario from "./funcionario.js";
 import Reserva from "./reserva.js";
 import Quarto from "./quarto.js";
 
-// funcionario:
-// - ver meus dados <getProfile> (quando eu logar, salvo o json do usuario em uma variável SEMPRE)
-// - ver lista de reservas (getReservas) <>
-// - ver lista de quartos (mesmo pros 2) (getQuartos) <>
-// - ver lista de clientes (getClientes) <>
-// - mudar status da reserva (pendente, adiada, realizada, cancelada) (setReserva)
-// - adicionar quarto (createQuarto) <>
-// - fazer cadastro funcionário (minha opinião) (createFuncionario) <>
-
-
-// cliente:
-// - ver meus dados (getProfile)
-// - ver lista de quartos (mesmo pros 2) (getQuartos) <>
-// - fazer reserva (como fazer isso?) <>
-// - cancelar reserva (como fazer isso?) <>
-// - ver minhas reservas () 
-
-
-// inicio:
-// - fazer login (cpf e senha)
-// - fazer cadastro (cliente)
-
-
+// a classe sistema comporta todos os métodos essenciais para a utilização do programa
 class Sistema {
     constructor() {
     }
@@ -49,6 +27,48 @@ class Sistema {
     static getFuncionarios() {
         const dados = lerDados();
         return dados.funcionarios || {};
+    }
+
+    login(cpf, senha){
+        const dados = lerDados();
+
+        // primeiro verifica se é funcionário
+        const funcionarios = dados.funcionarios || {};
+        for (const id in funcionarios) {
+            if (funcionarios[id].cpf === cpf && funcionarios[id].senha === senha) {
+                console.log("Funcionário logado com sucesso!");
+                console.log(`Bem-vindo(a), ${funcionarios[id].nome}!`);
+                
+                return {
+                    id: id,
+                    nome: funcionarios[id].nome,
+                    cpf: funcionarios[id].cpf,
+                    email: funcionarios[id].email,
+                    tipo: "funcionario"
+                };
+            }
+        }
+
+        // Se não encontrou nos funcionários, verifica nos clientes
+        const clientes = dados.clientes || {};
+        for (const id in clientes) {
+            if (clientes[id].cpf === cpf && clientes[id].senha === senha) {
+                console.log("Cliente logado com sucesso!");
+                console.log(`Bem-vindo(a), ${clientes[id].nome}!`);
+                
+                return {
+                    id: id,
+                    nome: clientes[id].nome,
+                    cpf: clientes[id].cpf,
+                    email: clientes[id].email,
+                    tipo: "cliente"
+                };
+            }
+        }
+
+        // Se chegou aqui, CPF ou senha estão incorretos
+        console.log("CPF ou senha incorretos.");
+        return null;
     }
 
     // menu do funcionario
@@ -138,8 +158,37 @@ class Sistema {
         console.log(`Você não possui nenhuma reserva em seu nome`);
     }
 
+    // menu do funcionario - alterar status de reserva
+    patchReserva(idCliente, novoStatus){
+        const dados = lerDados();
+        
+        // status possiveis
+        const statusValidos = ["ativa", "cancelada"];
+        
+        if (!statusValidos.includes(novoStatus)) {
+            console.log(`Status inválido. Use: ${statusValidos.join(", ")}`);
+            return;
+        }
+
+        // procura se o cliente tem reserva ativa
+        for (const id in dados.reservas) {
+            if (dados.reservas[id].idCliente === idCliente && dados.reservas[id].status === "ativa") {
+                const statusAnterior = dados.reservas[id].status;
+                dados.reservas[id].status = novoStatus;
+                
+                escreverDados(dados);
+                console.log(`Status da reserva alterado de "${statusAnterior}" para "${novoStatus}"`);
+                console.log(`Cliente: ${idCliente} | Quarto: ${dados.reservas[id].idQuarto}`);
+                return;
+            }
+        }
+        
+        console.log(`Não foi encontrada reserva ativa para o cliente ${idCliente}`);
+    }
+
     verReservas(idCliente){
         const dados = lerDados();
+        // vamos guardar as reservas em uma lista
         const reservasCliente = [];
 
         for(const id in dados.reservas){
@@ -177,7 +226,6 @@ class Sistema {
             dados.clientes = {};
         }
 
-        // verifica se o cliente ja existe
         for (const id in dados.clientes) {
             if (dados.clientes[id].cpf === cpf) {
                 console.log(`Cliente com CPF ${cpf} já cadastrado.`);
@@ -231,6 +279,39 @@ class Sistema {
 
         escreverDados(dados);
         console.log(`Funcionario ${nome} cadastrado com sucesso (ID: ${novoFuncionario.id})`);
+    }
+
+    getProfile(idUsuario, tipoUsuario){
+        const dados = lerDados();
+
+        let tabela, usuario;
+        
+        // mudanca para reconhecer automaticamente o tipo de usuario, se eh cliente ou funcionario
+        if (tipoUsuario === "cliente") {
+            tabela = dados.clientes;
+        } else if (tipoUsuario === "funcionario") {
+            tabela = dados.funcionarios;
+        } else {
+            console.log("Tipo de usuário inválido.");
+            return null;
+        }
+
+        // Procura o usuário pelo ID na tabela correta
+        if (tabela && tabela[idUsuario]) {
+            usuario = tabela[idUsuario];
+            
+            console.log("=== SEU PERFIL ===");
+            console.log(`Nome: ${usuario.nome}`);
+            console.log(`Data de Nascimento: ${usuario.dataNascimento}`);
+            console.log(`CPF: ${usuario.cpf}`);
+            console.log(`Email: ${usuario.email}`);
+            console.log("==================");
+            
+            return usuario;
+        } else {
+            console.log(`${tipoUsuario === "cliente" ? "Cliente" : "Funcionário"} não encontrado.`);
+            return null;
+        }
     }
 }
 
